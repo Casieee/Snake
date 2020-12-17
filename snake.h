@@ -11,6 +11,7 @@ class snake: public QGraphicsItem
 {
 public:
     friend class ControlCenter;
+    friend class subWidget;
     snake(ControlCenter &Game, int player);
     bool contains(const QPointF &p) const;
     ~snake();
@@ -35,9 +36,11 @@ protected:
     QPainterPath *headPath;
     int lengToGrow;        
     int deltaTime;
+    int speed;
     int Times;    
     int playerNumber;
     int life;
+    int score;
     int timeRecorder, SpeedUpRecorder, SpeedDownRecorder;
     bool ifSpeedUp,ifSpeedDown;
     bool invincible;
@@ -48,6 +51,7 @@ protected:
     void moveDOWN();
     void moveLEFT();
     void moveRIGHT();
+    void colorSwitchBack();
 };
 
 #endif // SNAKE_H

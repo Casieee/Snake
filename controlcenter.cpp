@@ -78,7 +78,11 @@ QPointF ControlCenter::randomPoint(){
 
 void ControlCenter::start(){
     connect(&timer,SIGNAL(timeout()),&Scene,SLOT(advance()));
-  //  connect(&timer,SIGNAL(timeout()),&Scene,SLOT(SnakeColliding()));
+    connect(&timer,SIGNAL(timeout()),this,SLOT(sendUpdate()));
+}
+
+void ControlCenter::sendUpdate(){
+    emit updateStatus();
 }
 
 void ControlCenter::pause(){

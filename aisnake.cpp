@@ -60,7 +60,8 @@ void AIsnake::advance(int phase){
     if(ifSpeedUp){
         SpeedUpRecorder++;
         if(SpeedUpRecorder == 25){
-            deltaTime-=2;
+            deltaTime+=1;
+            speed-=1;
             ifSpeedUp = false;
             SpeedUpRecorder = 0;
         }
@@ -69,7 +70,8 @@ void AIsnake::advance(int phase){
     if(ifSpeedDown){
         SpeedDownRecorder++;
         if(SpeedDownRecorder == 25){
-            deltaTime+=1;
+            deltaTime-=1;
+            speed+=1;
             ifSpeedDown = false;
             SpeedDownRecorder = 0;
         }
@@ -77,19 +79,23 @@ void AIsnake::advance(int phase){
 
     if(invincible) {
         timeRecorder++;
-        if(timeRecorder==10){
-            invincible = false;
-            color = lightGray;
-            color1 = deepGray;
+        switch (timeRecorder) {
+        case 6: case 10: colorSwitchBack(); break;
+        case 8: case 12: color = gold; color1 = Qt::yellow; break;
+        case 14: invincible = false;
+            colorSwitchBack();
+            break;
         }
     }
     else {
         if(inevitable){
             timeRecorder++;
-            if(timeRecorder==15){
-                inevitable = false;
-                color = lightGray;
-                color1 = deepGray;
+            switch (timeRecorder) {
+            case 8: case 12: colorSwitchBack(); break;
+            case 10: case 14: color = darkred; color1 = Qt::red; break;
+            case 16: inevitable = false;
+                colorSwitchBack();
+                break;
             }
         }
         handleCollisions();

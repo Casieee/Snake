@@ -13,6 +13,7 @@ ModeChoosePage::ModeChoosePage(QWidget *parent):
     move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
     this->setWindowFlags(Qt::FramelessWindowHint);
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowIcon(QIcon(":/snakeIcon/snake.png"));
 
     QLabel *title = new QLabel(this);
     title->setText("S");

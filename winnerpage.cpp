@@ -1,6 +1,7 @@
 #include "winnerpage.h"
 #include <QLabel>
 #include <QPushButton>
+#include <QDebug>
 
 WinnerPage::WinnerPage(int winner, QWidget *parent):
     QWidget(parent)
@@ -9,34 +10,50 @@ WinnerPage::WinnerPage(int winner, QWidget *parent):
     this->setWindowModality(Qt::ApplicationModal);
     this->setFixedSize(800,600);
     setAttribute(Qt::WA_DeleteOnClose);
-    if(winner == 1){
-        this->setStyleSheet("background-color:lightblue");
+    qDebug() <<winner;
+    switch (winner) {
+    case 1:
+        this->setStyleSheet("background-color:lightblue"); break;
+    case 2:
+        this->setStyleSheet("background-color:lightpink"); break;
+    case 3:
+        this->setStyleSheet("background-color:rgb(0,0,0)"); break;
     }
-    else{
-        this->setStyleSheet("background-color:lightpink");
-    }
+    setWindowIcon(QIcon(":/snakeIcon/snake.png"));
 
-    QLabel *title = new QLabel(this);
-    title->setText("The Winner is Player");
-    title->setFixedSize(600,300);
-    title->move(30,100);
-    title->setAlignment(Qt::AlignTop);title->setAlignment(Qt::AlignHCenter);
-    title->setStyleSheet("QLabel{font-family:'Showcard Gothic';font-size:50px;color:rgb(255,250,250);}");
-    title->show();
+    if(winner == 3){
+        QLabel *title = new QLabel(this);
+        title->setText("YOU ARE DEFEATED BY AI");
+        title->setFixedSize(900,300);
+        title->move(-50,100);
+        title->setAlignment(Qt::AlignTop);title->setAlignment(Qt::AlignHCenter);
+        qDebug() << "set title";
+        title->setStyleSheet("QLabel{font-family:'cascadia code';font-size:55px;color:rgb(254,254,254);}");
+        title->show();
+    }
+    else {
+        QLabel *title = new QLabel(this);
+        title->setText("The Winner is Player");
+        title->setFixedSize(600,300);
+        title->move(30,100);
+        title->setAlignment(Qt::AlignTop);title->setAlignment(Qt::AlignHCenter);
+        title->setStyleSheet("QLabel{font-family:'Showcard Gothic';font-size:50px;color:rgb(255,250,250);}");
+        title->show();
 
-    QLabel *num = new QLabel(this);
-    if(winner == 1){
-        num->setText("1");
-        num->setStyleSheet("QLabel{font-family:'Forte';font-size:150px;color:rgb(0,0,128);}");
+        QLabel *num = new QLabel(this);
+        if(winner == 1){
+            num->setText("1");
+            num->setStyleSheet("QLabel{font-family:'Forte';font-size:150px;color:rgb(0,0,128);}");
+        }
+        else{
+            num->setText("2");
+            num->setStyleSheet("QLabel{font-family:'Forte';font-size:150px;color:rgb(255,99,71);}");
+        }
+        num->setFixedSize(200,400);
+        num->move(655,50);
+        num->setAlignment(Qt::AlignTop);num->setAlignment(Qt::AlignLeft);
+        num->show();
     }
-    else{
-        num->setText("2");
-        num->setStyleSheet("QLabel{font-family:'Forte';font-size:150px;color:rgb(255,99,71);}");
-    }
-    num->setFixedSize(200,400);
-    num->move(655,50);
-    num->setAlignment(Qt::AlignTop);num->setAlignment(Qt::AlignLeft);
-    num->show();
 
     QPushButton *exit = new QPushButton(this);
     exit->setText("BACK");

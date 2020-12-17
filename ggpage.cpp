@@ -10,6 +10,7 @@ GGPage::GGPage(QWidget *parent):
     this->setFixedSize(800,600);
     this->setStyleSheet("background-color:rgb(0,0,0)");
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowIcon(QIcon(":/snakeIcon/snake.png"));
 
     QLabel *gg = new QLabel(this);
     gg->setText("GAME OVER");

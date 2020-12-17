@@ -12,7 +12,7 @@ Widget::Widget(QWidget *parent)
     QDesktopWidget *deskdop=QApplication::desktop();
     move((deskdop->width()-this->width())/2, (deskdop->height()-this->height())/2);
     this->setWindowFlags(Qt::FramelessWindowHint);
-
+    setWindowIcon(QIcon(":/snakeIcon/snake.png"));
 
     QPushButton *PlayButton = new QPushButton;
     PlayButton->setText("PLAY");

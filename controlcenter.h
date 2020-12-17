@@ -18,6 +18,7 @@ class ControlCenter: public QObject
     Q_OBJECT
 public:
     friend class snake;
+    friend class subWidget;
     ControlCenter(QGraphicsScene &scene, QObject *parent = 0, int num = 1, bool AI = false);
     ~ControlCenter();
     void SnakeIntoWall(int player);
@@ -36,11 +37,13 @@ signals:
     void turnToPausePage();
     void gameOver();
     void win();
+    void updateStatus();
 
 public slots:
     void start();
     void pause();
     void SnakesColliding();
+    void sendUpdate();
 
 private:
     QPointF randomPoint();

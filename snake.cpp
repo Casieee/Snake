@@ -10,9 +10,11 @@ snake::snake(ControlCenter &Game, int player):
     head(0,0),
     lengToGrow(3),
     deltaTime(5),
+    speed(2),
     Times(0),
     playerNumber(player),
     life(1),
+    score(0),
     timeRecorder(0),
     SpeedUpRecorder(0),
     SpeedDownRecorder(0),
@@ -127,6 +129,7 @@ void snake::advance(int phase){
     if(lengToGrow>0) {
         QPointF newPart = head;
         SnakeBody << newPart;
+        score++;
         lengToGrow--;
     }
     else if(lengToGrow < 0) {
@@ -135,6 +138,7 @@ void snake::advance(int phase){
             lengToGrow++;
         }
         SnakeBody << head;
+        score = 0;
     }else {
         SnakeBody.removeFirst();
         SnakeBody << head;
@@ -157,6 +161,7 @@ void snake::advance(int phase){
         SpeedUpRecorder++;
         if(SpeedUpRecorder == 25){
             deltaTime+=1;
+            speed--;
             ifSpeedUp = false;
             SpeedUpRecorder = 0;
         }
@@ -165,7 +170,8 @@ void snake::advance(int phase){
     if(ifSpeedDown){
         SpeedDownRecorder++;
         if(SpeedDownRecorder == 25){
-            deltaTime-=2;
+            deltaTime-=1;
+            speed++;
             ifSpeedDown = false;
             SpeedDownRecorder = 0;
         }
@@ -173,31 +179,23 @@ void snake::advance(int phase){
 
     if(invincible) {
         timeRecorder++;
-        if(timeRecorder==10){
-            invincible = false;
-            if(playerNumber == 1){
-                color = blue;
-                color1 = blue2;
-            }
-            if(playerNumber == 2){
-                color = pink;
-                color1 = deeppink;
-            }
+        switch (timeRecorder) {
+        case 6: case 10: colorSwitchBack(); break;
+        case 8: case 12: color = gold; color1 = Qt::yellow; break;
+        case 14: invincible = false;
+            colorSwitchBack();
+            break;
         }
     }
     else {
         if(inevitable){
             timeRecorder++;
-            if(timeRecorder==15){
-                inevitable = false;
-                if(playerNumber == 1){
-                    color = blue;
-                    color1 = blue2;
-                }
-                if(playerNumber == 2){
-                    color = pink;
-                    color1 = deeppink;
-                }
+            switch (timeRecorder) {
+            case 8: case 12: colorSwitchBack(); break;
+            case 10: case 14: color = darkred; color1 = Qt::red; break;
+            case 16: inevitable = false;
+                colorSwitchBack();
+                break;
             }
         }
         handleCollisions();
@@ -238,16 +236,33 @@ void snake::speedUp(){
     if(deltaTime!=4){
         ifSpeedUp = true;
         deltaTime-=1;
+        speed++;
     }
 }
 
 void snake::speedDown(){
-    if(deltaTime!=7){
+    if(deltaTime!=6){
         ifSpeedDown = true;
-        deltaTime+=2;
+        deltaTime+=1;
+        speed--;
     }
 }
 
 void snake::lifePlus(){
     life++;
+}
+
+void snake::colorSwitchBack(){
+    if(playerNumber == 1){
+        color = blue;
+        color1 = blue2;
+    }
+    if(playerNumber == 2){
+        color = pink;
+        color1 = deeppink;
+    }
+    if(playerNumber == 3){
+        color = lightGray;
+        color1 = deepGray;
+    }
 }

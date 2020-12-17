@@ -9,6 +9,7 @@ PausePage::PausePage(QWidget *parent):
     this->setWindowModality(Qt::ApplicationModal);
     this->setFixedSize(400,360);
     setAttribute(Qt::WA_DeleteOnClose);
+    setWindowIcon(QIcon(":/snakeIcon/snake.png"));
 
     QLabel *S = new QLabel(this);
     S->setText("S");
