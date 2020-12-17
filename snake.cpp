@@ -23,7 +23,6 @@ snake::snake(ControlCenter &Game, int player):
 {
     headPath = new QPainterPath;
     if(player == 1){
-        life = 100;
         dir=DOWN;
         preDir=DOWN;
         color = blue;
