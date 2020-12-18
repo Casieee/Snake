@@ -46,6 +46,7 @@ protected:
     bool invincible;
     bool inevitable;
     QColor color, color1;
+    QList<Direction> moves;
 
     void moveUP();
     void moveDOWN();

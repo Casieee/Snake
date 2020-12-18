@@ -126,6 +126,9 @@ void snake::advance(int phase){
     Times++;
     if(Times%deltaTime != 0) return;
 
+    if(!moves.empty()){
+        dir = moves.takeFirst();
+    }
     if(lengToGrow>0) {
         QPointF newPart = head;
         SnakeBody << newPart;
@@ -159,7 +162,7 @@ void snake::advance(int phase){
 
     if(ifSpeedUp){
         SpeedUpRecorder++;
-        if(SpeedUpRecorder == 25){
+        if(SpeedUpRecorder == 35){
             deltaTime+=1;
             speed--;
             ifSpeedUp = false;
@@ -169,7 +172,7 @@ void snake::advance(int phase){
 
     if(ifSpeedDown){
         SpeedDownRecorder++;
-        if(SpeedDownRecorder == 25){
+        if(SpeedDownRecorder == 35){
             deltaTime-=1;
             speed++;
             ifSpeedDown = false;
@@ -191,9 +194,9 @@ void snake::advance(int phase){
         if(inevitable){
             timeRecorder++;
             switch (timeRecorder) {
-            case 8: case 12: colorSwitchBack(); break;
-            case 10: case 14: color = darkred; color1 = Qt::red; break;
-            case 16: inevitable = false;
+            case 12: case 18: colorSwitchBack(); break;
+            case 15: case 21: color = darkred; color1 = Qt::red; break;
+            case 24: inevitable = false;
                 colorSwitchBack();
                 break;
             }

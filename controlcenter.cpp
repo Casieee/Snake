@@ -108,23 +108,23 @@ void ControlCenter::KeyPressed(QKeyEvent *event){
     }
 
     if(event->key() == Qt::Key_W)
-        s[0]->redirection(UP);
+        s[0]->moves.push_back(UP);
     if(event->key() == Qt::Key_S)
-        s[0]->redirection(DOWN);
+        s[0]->moves.push_back(DOWN);
     if(event->key() == Qt::Key_A)
-        s[0]->redirection(LEFT);
+        s[0]->moves.push_back(LEFT);
     if(event->key() == Qt::Key_D)
-        s[0]->redirection(RIGHT);
+        s[0]->moves.push_back(RIGHT);
 
     if(playerNum == 2 && !ifAI){
         if(event->key() == Qt::Key_Up)
-            s[1]->redirection(UP);
+            s[1]->moves.push_back(UP);
         if(event->key() == Qt::Key_Down)
-            s[1]->redirection(DOWN);
+            s[1]->moves.push_back(DOWN);
         if(event->key() == Qt::Key_Left)
-            s[1]->redirection(LEFT);
+            s[1]->moves.push_back(LEFT);
         if(event->key() == Qt::Key_Right)
-            s[1]->redirection(RIGHT);
+            s[1]->moves.push_back(RIGHT);
     }
 }
 
@@ -286,7 +286,7 @@ bool ControlCenter::IntoItem(QPointF p){
             return true;
     }
 
-    if(s[0]->contains(p)&&s[0]->contains(QPointF(p.x()+block,p.y()+block))){
+    if(s[0]->contains(p)){
         return true;
     }
 
