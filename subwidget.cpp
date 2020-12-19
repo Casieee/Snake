@@ -40,7 +40,6 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
     //ggPage
     if(playernum == 1 && !AI)
         connect(game,&ControlCenter::gameOver,this,[=](){
-            qDebug() << "gg";
             gg = new GGPage;
             gg->show();
             connect(gg,&GGPage::Back,this,&subWidget::backToMenu);
@@ -53,7 +52,6 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
     //winnerPage
     if(playernum == 2 || AI)
         connect(game,&ControlCenter::win,this,[=](){
-            qDebug() << "ai win , player" << game->winner;
             win = new WinnerPage(game->winner);
             win->show();
             connect(win,&WinnerPage::Back,this,&subWidget::backToMenu);

@@ -23,7 +23,7 @@ snake::snake(ControlCenter &Game, int player):
     ifSpeedDown(false),
     invincible(false),
     inevitable(false),
-    rainbow(false)
+    render(false)
 {
     headPath = new QPainterPath;
     if(player == 1){
@@ -89,7 +89,7 @@ QPainterPath snake::shape() const{
 
 void snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
     painter->save();
-    if (!rainbow) {
+    if (!render) {
         painter->fillPath(shape(),color);
         painter->fillPath(*headPath,color1);
         headPath->clear();

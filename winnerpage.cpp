@@ -10,7 +10,6 @@ WinnerPage::WinnerPage(int winner, QWidget *parent):
     this->setWindowModality(Qt::ApplicationModal);
     this->setFixedSize(800,600);
     setAttribute(Qt::WA_DeleteOnClose);
-    qDebug() <<winner;
     switch (winner) {
     case 1:
         this->setStyleSheet("background-color:lightblue"); break;
@@ -27,7 +26,6 @@ WinnerPage::WinnerPage(int winner, QWidget *parent):
         title->setFixedSize(900,300);
         title->move(-50,100);
         title->setAlignment(Qt::AlignTop);title->setAlignment(Qt::AlignHCenter);
-        qDebug() << "set title";
         title->setStyleSheet("QLabel{font-family:'cascadia code';font-size:55px;color:rgb(254,254,254);}");
         title->show();
     }

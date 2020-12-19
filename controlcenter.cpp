@@ -101,7 +101,6 @@ void ControlCenter::GG(){
 }
 
 void ControlCenter::judgeWinner(int player){
-   // disconnect(&timer,SIGNAL(timeout()),&Scene,SLOT(SnakeColliding()));
     disconnect(&timer,SIGNAL(timeout()),&Scene,SLOT(advance()));
     winner = player;
     emit win();
@@ -128,9 +127,9 @@ void ControlCenter::KeyPressed(QKeyEvent *event){
         }
     }
 
-    if(s[0]->useCheat.length() == 8 && !s[0]->rainbow)
+    if(s[0]->useCheat.length() == 8 && !s[0]->render)
         checkCheats(s[0]->useCheat, 1);
-    if(playerNum == 2&& s[1]->useCheat.length() == 8 && !s[1]->rainbow)
+    if(playerNum == 2&& s[1]->useCheat.length() == 8 && !s[1]->render)
         checkCheats(s[1]->useCheat, 2);
 }
 
@@ -141,12 +140,15 @@ void ControlCenter::checkCheats(QVector<Direction> &directs, int player){
             return;
         }
     }
-    qDebug() << player << "cheat successfully";
-    s[player - 1]->rainbow = true;
+    s[player - 1]->render = true;
+
+    if(ifAI){
+        ai->render = true;
+    }
 }
 
 void ControlCenter::SnakeIntoWall(int player){
-   if(playerNum == 1){
+   if(playerNum == 1 && !ifAI){
         for(int i =0; i < wallNum; ++i){
             if(wall[i] == nullptr) continue;
             QPointF h;
@@ -158,21 +160,18 @@ void ControlCenter::SnakeIntoWall(int player){
                     wall[i]->setRect(1000,1000,1,1);
                 }
                 else {
-                    if(--s[0]->life == 0){
-                        if(!ifAI)
+                    if(--s[0]->life == 0) {
                             GG();
-                        else
-                            judgeWinner(3);
                     }
-                    else
+                    else {
                         s[0]->Invincible2s();
-
+                    }
                 }
                 return;
             }
         }
     }
-    if(playerNum == 2){
+    if(playerNum == 2 || ifAI) {
         for(int i =0; i < wallNum; ++i){
             if(wall[i] == nullptr) continue;
             QPointF h;
@@ -185,8 +184,12 @@ void ControlCenter::SnakeIntoWall(int player){
                 }
                 else {
                     if(--s[player-1]->life == 0){
-                        if(player == 1)
-                            judgeWinner(2);
+                        if(player == 1){
+                            if(ifAI)
+                                judgeWinner(3);
+                            else
+                                judgeWinner(2);
+                        }
                         else
                             judgeWinner(1);
                     }
@@ -228,24 +231,27 @@ void ControlCenter::automove(QPointF head, Direction &dir){
         }
     }
 
+    if(ai->inevitable)
+        target = s[0]->head;
+
     if(!XDirection(head,target,dir)){
         if(!YDirection(head,target,dir)){
-            if(!IntoItem(QPointF(head.x(),head.y()-block)) && dir - UP != 2){
-                dir = UP;
-                return;
-            }
-            if(!IntoItem(QPointF(head.x()+block,head.y())) && dir - RIGHT != 2) {
-                dir = RIGHT;
+            if(!IntoItem(QPointF(head.x()-block,head.y())) && LEFT - dir != 2) {
+                dir = LEFT;
                 return;
             }
             if(!IntoItem(QPointF(head.x(),head.y()+block)) && DOWN - dir != 2) {
                 dir = DOWN;
                 return;
             }
-            if(!IntoItem(QPointF(head.x()-block,head.y())) && LEFT - dir != 2) {
-                dir = LEFT;
+            if(!IntoItem(QPointF(head.x()+block,head.y())) && dir - RIGHT != 2) {
+                dir = RIGHT;
                 return;
             }
+            if(!IntoItem(QPointF(head.x(),head.y()-block)) && dir - UP != 2){
+                dir = UP;
+                return;
+            }                                  
         }
     }
 }
@@ -295,16 +301,18 @@ bool ControlCenter::YDirection(QPointF head, QPointF target, Direction &dir){
 }
 
 bool ControlCenter::IntoItem(QPointF p){
-    if(p.x() < 0 || p.x() >= 900 || p.y() < 0 || p.y() >= 720)
-        return true;
+//    if(p.x() < 0 || p.x() >= 900 || p.y() < 0 || p.y() >= 720)
+//        return true;
 
-    for(int i = 0; i < wallNum ; i++){
-        if(wall[i]->contains(p)&&wall[i]->contains(QPointF(p.x()+block,p.y()+block)))
+    if(!ai->inevitable){
+        for(int i = 0; i < wallNum ; i++){
+            if(wall[i]->contains(p)&&wall[i]->contains(QPointF(p.x()+block,p.y()+block)))
+                return true;
+        }
+
+        if(s[0]->contains(p)){
             return true;
-    }
-
-    if(s[0]->contains(p)){
-        return true;
+        }
     }
 
     if(ai->pathIntoBody(p))
