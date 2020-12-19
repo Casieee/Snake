@@ -50,6 +50,7 @@ private:
     void addNewFood(food* f);
     bool XDirection(QPointF head, QPointF target, Direction &dir);
     bool YDirection(QPointF head, QPointF target, Direction &dir);
+    void checkCheats(QVector<Direction> &directs, int player);
 
     QTimer timer;
     food *f[8];
@@ -60,6 +61,7 @@ private:
     bool ifAI;
     int playerNum;
     QGraphicsRectItem *wall[10];
+    QVector<Direction> cheats;
     int wallNum;
 };
 

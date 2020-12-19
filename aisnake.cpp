@@ -6,8 +6,10 @@ AIsnake::AIsnake(ControlCenter &Game, int player):
     snake(Game, player)
 {
     head = mapFromScene(QPointF(900-block,720-block));
-    color = lightGray;
-    color1 = deepGray;
+    defaultColor = lightGray;
+    defaultColor1 = deepGray;
+    color = defaultColor;
+    color1 = defaultColor1;
     dir = UP;
     preDir = UP;
 }

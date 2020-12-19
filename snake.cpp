@@ -4,6 +4,7 @@
 #include "QDebug"
 #include "food.h"
 #include <QLabel>
+#include <QColor>
 
 snake::snake(ControlCenter &Game, int player):    
     game(Game),
@@ -21,21 +22,26 @@ snake::snake(ControlCenter &Game, int player):
     ifSpeedUp(false),
     ifSpeedDown(false),
     invincible(false),
-    inevitable(false)
+    inevitable(false),
+    rainbow(false)
 {
     headPath = new QPainterPath;
     if(player == 1){
         dir=DOWN;
         preDir=DOWN;
-        color = blue;
-        color1 = blue2;
+        defaultColor = blue;
+        defaultColor1 = blue2;
+        color = defaultColor;
+        color1 = defaultColor1;
     }
     if(player == 2){
         head = mapFromScene(QPointF(900-block,720-block));
         dir=UP;
         preDir=UP;
-        color = pink;
-        color1 = deeppink;
+        defaultColor = pink;
+        defaultColor1 = deeppink;
+        color = defaultColor;
+        color1 = defaultColor1;
     }
 }
 
@@ -83,9 +89,26 @@ QPainterPath snake::shape() const{
 
 void snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
     painter->save();
-    painter->fillPath(shape(),color);
-    painter->fillPath(*headPath,color1);
-    headPath->clear();
+    if (!rainbow) {
+        painter->fillPath(shape(),color);
+        painter->fillPath(*headPath,color1);
+        headPath->clear();
+    }
+    else {
+        painter->setPen(defaultColor);
+        int leng = SnakeBody.length();
+        int r1 = color.red(), r2 = color1.red(), deltaR = (r1 - r2)/leng;
+        int g1 = color.green(), g2 = color1.green(), deltaG = (g1 - g2)/leng;
+        int b1 = color.blue(), b2 = color1.blue(), deltaB = (b1 - b2)/leng;
+
+        for (int i = 0; i < leng; i++) {
+            QPointF R = mapFromScene(SnakeBody[i]);
+            painter->setBrush(QColor(r1 - i*deltaR, g1 - i*deltaG, b1 - i*deltaB));
+            painter->drawRect(QRect(R.x(),R.y(),block,block));
+        }
+        painter->setBrush(color1);
+        painter->drawRect(0,0,block,block);
+    }
     painter->restore();
 }
 
@@ -256,16 +279,6 @@ void snake::lifePlus(){
 }
 
 void snake::colorSwitchBack(){
-    if(playerNumber == 1){
-        color = blue;
-        color1 = blue2;
-    }
-    if(playerNumber == 2){
-        color = pink;
-        color1 = deeppink;
-    }
-    if(playerNumber == 3){
-        color = lightGray;
-        color1 = deepGray;
-    }
+    color = defaultColor;
+    color1 = defaultColor1;
 }

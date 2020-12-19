@@ -45,8 +45,11 @@ protected:
     bool ifSpeedUp,ifSpeedDown;
     bool invincible;
     bool inevitable;
+    bool rainbow;
     QColor color, color1;
+    QColor defaultColor, defaultColor1;
     QList<Direction> moves;
+    QVector<Direction> useCheat;
 
     void moveUP();
     void moveDOWN();

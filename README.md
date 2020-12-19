@@ -40,7 +40,7 @@ This is a classic Snake game with following modes:
 - You CAN pass through the border of the window and appear on the other side, so show your special skills.
 - All the special foods' abilities have a TIME LIMIT.
 - When you become INVINCIBLE, your snake's colour will change to  gold. When you become UNSTOPPABLE, it gets to be darkred. When these effects are going to fade away, the snake colour will SWITCH TWICE to remind you.
-- You can have a unique colour by pressing the keys in a special sequence (haven't accomplish yet).
+- You can have a unique colour by pressing the keys in a special sequence .
 
 Due to the deadline, this game may seem a little poor, but this is my first game and I really enjoying writing it (though it makes me crazy when I can't find the bugs). I hope you can enjoy playing it, and I am willing to have your feedback and advice. THANK YOU!
 

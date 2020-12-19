@@ -22,6 +22,11 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
     timer.start(15);
     srand((unsigned)time(NULL));
 
+    cheats.push_back(UP);cheats.push_back(UP);
+    cheats.push_back(DOWN);cheats.push_back(DOWN);
+    cheats.push_back(LEFT);cheats.push_back(RIGHT);
+    cheats.push_back(LEFT);cheats.push_back(RIGHT);
+
     wall[0] = new QGraphicsRectItem(180, 150, block*2, block*2);
     wall[1] = new QGraphicsRectItem(660, 150, block*2, block*2);
     wall[2] = new QGraphicsRectItem(180, 510, block*2, block*2);
@@ -107,25 +112,37 @@ void ControlCenter::KeyPressed(QKeyEvent *event){
         pause();
     }
 
-    if(event->key() == Qt::Key_W)
-        s[0]->moves.push_back(UP);
-    if(event->key() == Qt::Key_S)
-        s[0]->moves.push_back(DOWN);
-    if(event->key() == Qt::Key_A)
-        s[0]->moves.push_back(LEFT);
-    if(event->key() == Qt::Key_D)
-        s[0]->moves.push_back(RIGHT);
+    switch(event->key()){
+    case Qt::Key_W: s[0]->moves.push_back(UP); s[0]->useCheat.push_back(UP); break;
+    case Qt::Key_S: s[0]->moves.push_back(DOWN); s[0]->useCheat.push_back(DOWN); break;
+    case Qt::Key_A: s[0]->moves.push_back(LEFT); s[0]->useCheat.push_back(LEFT); break;
+    case Qt::Key_D: s[0]->moves.push_back(RIGHT); s[0]->useCheat.push_back(RIGHT); break;
+    }
 
     if(playerNum == 2 && !ifAI){
-        if(event->key() == Qt::Key_Up)
-            s[1]->moves.push_back(UP);
-        if(event->key() == Qt::Key_Down)
-            s[1]->moves.push_back(DOWN);
-        if(event->key() == Qt::Key_Left)
-            s[1]->moves.push_back(LEFT);
-        if(event->key() == Qt::Key_Right)
-            s[1]->moves.push_back(RIGHT);
+        switch(event->key()){
+        case Qt::Key_Up: s[1]->moves.push_back(UP); s[1]->useCheat.push_back(UP); break;
+        case Qt::Key_Down: s[1]->moves.push_back(DOWN); s[1]->useCheat.push_back(DOWN); break;
+        case Qt::Key_Left: s[1]->moves.push_back(LEFT); s[1]->useCheat.push_back(LEFT); break;
+        case Qt::Key_Right: s[1]->moves.push_back(RIGHT); s[1]->useCheat.push_back(RIGHT); break;
+        }
     }
+
+    if(s[0]->useCheat.length() == 8 && !s[0]->rainbow)
+        checkCheats(s[0]->useCheat, 1);
+    if(playerNum == 2&& s[1]->useCheat.length() == 8 && !s[1]->rainbow)
+        checkCheats(s[1]->useCheat, 2);
+}
+
+void ControlCenter::checkCheats(QVector<Direction> &directs, int player){
+    for (int i = 0; i < 8; ++i) {
+        if(cheats[i] != directs[i]){
+            directs.pop_front();
+            return;
+        }
+    }
+    qDebug() << player << "cheat successfully";
+    s[player - 1]->rainbow = true;
 }
 
 void ControlCenter::SnakeIntoWall(int player){
