@@ -93,9 +93,9 @@ void AIsnake::advance(int phase){
         if(inevitable){
             timeRecorder++;
             switch (timeRecorder) {
-            case 12: case 18: colorSwitchBack(); break;
-            case 15: case 21: color = darkred; color1 = Qt::red; break;
-            case 24: inevitable = false;
+            case 12: case 16: colorSwitchBack(); break;
+            case 14: case 18: color = darkred; color1 = Qt::red; break;
+            case 20: inevitable = false;
                 colorSwitchBack();
                 break;
             }

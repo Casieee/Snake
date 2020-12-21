@@ -20,7 +20,7 @@ Widget::Widget(QWidget *parent)
     PlayButton->setFixedSize(250,80);
     PlayButton->move(300,400);
     PlayButton->setStyleSheet(
-                "QPushButton{font-family:'Bauhaus 93';font-size:32px;color:rgb(255,250,250);}\
+                "QPushButton{font-family:'Bauhaus 93';font-size:40px;color:rgb(255,250,250);}\
                  QPushButton{background-color:rgb(170,200,50)}\
                  QPushButton:hover{background-color:rgb(50, 170, 200)}");
     PlayButton->show();
@@ -29,7 +29,7 @@ Widget::Widget(QWidget *parent)
     ExitButton->setFixedSize(250,80);
     ExitButton->move(300,540);
     ExitButton->setStyleSheet(
-                "QPushButton{font-family:'Bauhaus 93';font-size:32px;color:rgb(255,250,250);}\
+                "QPushButton{font-family:'Bauhaus 93';font-size:40px;color:rgb(255,250,250);}\
                  QPushButton{background-color:rgb(170,200,50)}\
                  QPushButton:hover{background-color:rgb(50, 170, 200)}");
     ExitButton->show();

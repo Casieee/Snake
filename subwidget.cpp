@@ -52,7 +52,11 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
     //winnerPage
     if(playernum == 2 || AI)
         connect(game,&ControlCenter::win,this,[=](){
-            win = new WinnerPage(game->winner);
+            if (AI && game->winner == 1){
+                win = new WinnerPage(4);
+            }
+            else
+                win = new WinnerPage(game->winner);
             win->show();
             connect(win,&WinnerPage::Back,this,&subWidget::backToMenu);
             connect(win,&WinnerPage::Restart,this,[=](){

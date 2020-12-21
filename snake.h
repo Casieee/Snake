@@ -45,7 +45,7 @@ protected:
     bool ifSpeedUp,ifSpeedDown;
     bool invincible;
     bool inevitable;
-    bool rainbow;
+    bool render;
     QColor color, color1;
     QColor defaultColor, defaultColor1;
     QList<Direction> moves;
