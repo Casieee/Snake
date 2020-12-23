@@ -17,7 +17,6 @@ public:
     ~snake();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-    QPainterPath shape() const;
     void advance(int phase);
     void handleCollisions();
     void redirection(Direction di);

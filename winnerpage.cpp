@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QApplication>
-#include <QFont>`
+#include <QFont>
 
 WinnerPage::WinnerPage(int winner, QWidget *parent):
     QWidget(parent)
@@ -85,7 +85,7 @@ WinnerPage::WinnerPage(int winner, QWidget *parent):
     exit->move(400,560);
     exit->setStyleSheet("QPushButton{font-family:'Bauhaus 93';font-size:50px;color:rgb(0,0,0);}\
                         QPushButton{background-color:rgb(255,250,250)}\
-                        QPushButton:hover{background-color:rgb(39,64,139)}");
+                        QPushButton:hover{background-color:NavajoWhite}");
     exit->show();
 
     QPushButton *restart = new QPushButton(this);
@@ -94,7 +94,7 @@ WinnerPage::WinnerPage(int winner, QWidget *parent):
     restart->move(400,400);
     restart->setStyleSheet("QPushButton{font-family:'Bauhaus 93';font-size:50px;color:rgb(0,0,0);}\
                           QPushButton{background-color:rgb(255,250,250)}\
-                          QPushButton:hover{background-color:rgb(39,64,139)}");
+                          QPushButton:hover{background-color:NavajoWhite}");
     restart->show();
 
     connect(exit,&QPushButton::clicked,this,[=](){

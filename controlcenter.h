@@ -25,7 +25,7 @@ public:
     void HeadIntoBody(int player);
     bool eventFilter(QObject *object, QEvent *event);
     void KeyPressed(QKeyEvent* event);
-    bool handleCollisions(QPointF head, int player);
+    bool EatFood(QPointF head, int player);
     void automove(QPointF head, Direction &dir);
     bool IntoItem(QPointF p);
     void judgeWinner(int player);

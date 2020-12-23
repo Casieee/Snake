@@ -71,31 +71,24 @@ QRectF snake::boundingRect() const{
     return bR;
 }
 
-QPainterPath snake::shape() const{
-    QPainterPath path;
-    path.setFillRule(Qt::WindingFill);
-
-    QRectF Rec(0,0,block,block);
-    path.addRect(Rec);
-    QRectF r(7.5,7.5,15,15);
-    headPath->addRect(r);
-    for(QPointF T:SnakeBody){
-        QPointF R = mapFromScene(T);
-        QRectF Rec(R.x(),R.y(),block,block);
-        path.addRect(Rec);
-    }
-    return path;
-}
-
 void snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *){
     painter->save();
+    painter->setPen(color);
     if (!render) {
-        painter->fillPath(shape(),color);
-        painter->fillPath(*headPath,color1);
-        headPath->clear();
+        painter->setBrush(color);
+        QRectF Rec(0,0,block,block);
+        painter->drawRect(Rec);
+        for(QPointF T:SnakeBody){
+            QPointF R = mapFromScene(T);
+            QRectF Rec(R.x(),R.y(),block,block);
+            painter->drawRect(Rec);
+        }
+
+        QRectF r(block/4,block/4,block/2,block/2);
+        painter->setBrush(color1);
+        painter->drawRect(r);
     }
     else {
-        painter->setPen(defaultColor);
         int leng = SnakeBody.length();
         int r1 = color.red(), r2 = color1.red(), deltaR = (r1 - r2)/leng;
         int g1 = color.green(), g2 = color1.green(), deltaG = (g1 - g2)/leng;
@@ -113,7 +106,7 @@ void snake::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *
 }
 
 void snake::handleCollisions(){
-    if(game.handleCollisions(head, playerNumber)){
+    if(game.EatFood(head, playerNumber)){
         lengToGrow++;
     }
 

@@ -75,8 +75,8 @@ QPointF ControlCenter::randomPoint(){
 
     p.rx() = rand()*840/RAND_MAX;
     p.ry() = rand()*660/RAND_MAX;
-    p.rx() = p.x() - (int)p.x() % 30 + 30;
-    p.ry() = p.y() - (int)p.y() % 30 + 30;
+    p.rx() = p.x() - (int)p.x() % (int)block + block;
+    p.ry() = p.y() - (int)p.y() % (int)block + block;
 
     return p;
 }
@@ -202,7 +202,7 @@ void ControlCenter::SnakeIntoWall(int player){
     }
 }
 
-bool ControlCenter::handleCollisions(QPointF head, int player){
+bool ControlCenter::EatFood(QPointF head, int player){
     for(int i = 0; i < foodNum; i++){
         if(f[i]!=nullptr&&f[i]->scenePos() == head){
             switch (f[i]->type) {
@@ -301,9 +301,6 @@ bool ControlCenter::YDirection(QPointF head, QPointF target, Direction &dir){
 }
 
 bool ControlCenter::IntoItem(QPointF p){
-//    if(p.x() < 0 || p.x() >= 900 || p.y() < 0 || p.y() >= 720)
-//        return true;
-
     if(!ai->inevitable){
         for(int i = 0; i < wallNum ; i++){
             if(wall[i]->contains(p)&&wall[i]->contains(QPointF(p.x()+block,p.y()+block)))
