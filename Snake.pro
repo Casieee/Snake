@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     aisnake.cpp \
+    bricks.cpp \
     controlcenter.cpp \
     food.cpp \
     ggpage.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
 
 HEADERS += \
     aisnake.h \
+    bricks.h \
     constants.h \
     controlcenter.h \
     food.h \

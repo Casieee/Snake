@@ -19,6 +19,7 @@ public:
 
 public slots:
     void backToMenu(); 
+    void edit();
 
 signals:
     void closeMe();

@@ -43,6 +43,7 @@ snake::snake(ControlCenter &Game, int player):
         color = defaultColor;
         color1 = defaultColor1;
     }
+    setAcceptDrops(false);
 }
 
 snake::~snake(){}
@@ -201,9 +202,8 @@ void snake::advance(int phase){
         switch (timeRecorder) {
         case 6: case 10: colorSwitchBack(); break;
         case 8: case 12: color = gold; color1 = Qt::yellow; break;
-        case 14: invincible = false;
-            colorSwitchBack();
-            break;
+        case 14: colorSwitchBack(); break;
+        case 15: invincible = false;
         }
     }
     else {
@@ -212,9 +212,8 @@ void snake::advance(int phase){
             switch (timeRecorder) {
             case 12: case 18: colorSwitchBack(); break;
             case 15: case 21: color = darkred; color1 = Qt::red; break;
-            case 24: inevitable = false;
-                colorSwitchBack();
-                break;
+            case 24: colorSwitchBack(); break;
+            case 25: inevitable = false;
             }
         }
         handleCollisions();

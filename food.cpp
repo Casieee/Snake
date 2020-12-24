@@ -8,6 +8,7 @@ food::food(QPointF P, int type):
 {
     setPos(P);
     changeType(type);
+    setAcceptDrops(true);
 }
 
 QRectF food::boundingRect() const
@@ -30,6 +31,15 @@ QPainterPath food::shape() const
     QPainterPath p;
     p.addEllipse(QPointF(block/2,block/2), block/2-5, block/2-5);
     return p;
+}
+
+bool food::contains(const QPointF &t) const{
+    QPointF tl = this->scenePos();
+    QRectF r(tl.x(),tl.y(),block,block);
+    if(r.contains(t))
+        return true;
+    else
+        return false;
 }
 
 void food::changeType(int t){

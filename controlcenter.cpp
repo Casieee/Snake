@@ -9,6 +9,8 @@
 #include "aisnake.h"
 #include <QPushButton>
 #include <QQueue>
+#include <QGraphicsSceneMouseEvent>
+#include "bricks.h"
 
 ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bool AI):
     QObject(parent),
@@ -17,7 +19,9 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
     Scene(scene),
     ifAI(AI),
     playerNum(num),
-    wallNum(5)
+    wallNum(5),
+    editable(false),
+    ifMoving(false)
 {
     timer.start(15);
     srand((unsigned)time(NULL));
@@ -27,28 +31,30 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
     cheats.push_back(LEFT);cheats.push_back(RIGHT);
     cheats.push_back(LEFT);cheats.push_back(RIGHT);
 
-    wall[0] = new QGraphicsRectItem(180, 150, block*2, block*2);
-    wall[1] = new QGraphicsRectItem(660, 150, block*2, block*2);
-    wall[2] = new QGraphicsRectItem(180, 510, block*2, block*2);
-    wall[3] = new QGraphicsRectItem(660, 510, block*2, block*2);
-    wall[4] = new QGraphicsRectItem(420, 330, block*2 ,block*2);
+    originWall[0] = new Bricks(QPointF(180, 150), 2, 2);
+    originWall[1] = new Bricks(QPointF(660, 150), 2, 2);
+    originWall[2] = new Bricks(QPointF(180, 510), 2, 2);
+    originWall[3] = new Bricks(QPointF(660, 510), 2, 2);
+    originWall[4] = new Bricks(QPointF(420, 330), 2 ,2);
     for(int i = 0 ; i<wallNum; ++i){
-        if(wall[i] == nullptr) continue;
-        wall[i]->setBrush(Qt::black);
-        Scene.addItem(wall[i]);
+        Wall.push_back(originWall[i]);
+        Scene.addItem(originWall[i]);
     }
 
-    f[0] = new food(QPointF(210,360));
-    Scene.addItem(f[0]);
-    f[1] = new food(QPointF(660,360));
-    Scene.addItem(f[1]);
+    originFood[0] = new food(QPointF(210,360));
+    Scene.addItem(originFood[0]);
+    Food.push_back(originFood[0]);
+    originFood[1] = new food(QPointF(660,360));
+    Scene.addItem(originFood[1]);
+    Food.push_back(originFood[1]);
 
     if(playerNum == 2){
         foodNum = 3;
         s[1] = new snake(*this,2);
         Scene.addItem(s[1]);
-        f[2] = new food(QPointF(450,150), 1);
-        Scene.addItem(f[2]);
+        originFood[2] = new food(QPointF(450,150), 1);
+        Scene.addItem(originFood[2]);
+        Food.push_back(originFood[2]);
     }
 
     if(AI){
@@ -56,8 +62,9 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
         ai = new AIsnake(*this,3);
         s[2] = ai;
         Scene.addItem(s[2]);
-        f[2] = new food(QPointF(450,150), 1);
-        Scene.addItem(f[2]);
+        originFood[2] = new food(QPointF(450,150), 1);
+        Scene.addItem(originFood[2]);
+        Food.push_back(originFood[2]);
     }
 
     s[0] = new snake(*this,1);
@@ -84,6 +91,8 @@ QPointF ControlCenter::randomPoint(){
 void ControlCenter::start(){
     connect(&timer,SIGNAL(timeout()),&Scene,SLOT(advance()));
     connect(&timer,SIGNAL(timeout()),this,SLOT(sendUpdate()));
+    editable = false;
+    ifMoving = false;
 }
 
 void ControlCenter::sendUpdate(){
@@ -149,15 +158,15 @@ void ControlCenter::checkCheats(QVector<Direction> &directs, int player){
 
 void ControlCenter::SnakeIntoWall(int player){
    if(playerNum == 1 && !ifAI){
-        for(int i =0; i < wallNum; ++i){
-            if(wall[i] == nullptr) continue;
+        for(Bricks* w: Wall) {
+            if(w == nullptr) continue;
             QPointF h;
             h.rx() = s[0]->head.x() + block;
             h.ry() = s[0]->head.y() + block;
-            if(wall[i]->contains(h)&&wall[i]->contains(s[0]->head)){
+            if(w->contains(h)&&w->contains(s[0]->head)){
                 if(s[0]->inevitable){
-                    Scene.removeItem(wall[i]);
-                    wall[i]->setRect(1000,1000,1,1);
+                    Scene.removeItem(w);
+                    Wall.removeOne(w);
                 }
                 else {
                     if(--s[0]->life == 0) {
@@ -172,15 +181,15 @@ void ControlCenter::SnakeIntoWall(int player){
         }
     }
     if(playerNum == 2 || ifAI) {
-        for(int i =0; i < wallNum; ++i){
-            if(wall[i] == nullptr) continue;
+        for(Bricks* w: Wall){
+            if(w == nullptr) continue;
             QPointF h;
             h.rx() = s[player-1]->head.x() + block;
             h.ry() = s[player-1]->head.y() + block;
-            if(wall[i]->contains(s[player-1]->head)&&wall[i]->contains(h)){
+            if(w->contains(s[player-1]->head)&&w->contains(h)){
                 if(s[player-1]->inevitable){
-                    Scene.removeItem(wall[i]);
-                    wall[i]->setRect(1000,1000,1,1);
+                    Scene.removeItem(w);
+                    Wall.removeOne(w);
                 }
                 else {
                     if(--s[player-1]->life == 0){
@@ -203,15 +212,15 @@ void ControlCenter::SnakeIntoWall(int player){
 }
 
 bool ControlCenter::EatFood(QPointF head, int player){
-    for(int i = 0; i < foodNum; i++){
-        if(f[i]!=nullptr&&f[i]->scenePos() == head){
-            switch (f[i]->type) {
+    for(food* f: Food){
+        if(f!=nullptr&&f->scenePos() == head){
+            switch (f->type) {
             case 1: case 5: s[player-1]->speedDown(); break;
             case 2: case 6: s[player-1]->speedUp(); break;
             case 3: s[player-1]->lifePlus(); break;
             case 4: s[player-1]->Inevitalbe2s();break;
             }
-            addNewFood(f[i]);
+            addNewFood(f);
             return true;
         }
     }
@@ -221,9 +230,9 @@ bool ControlCenter::EatFood(QPointF head, int player){
 void ControlCenter::automove(QPointF head, Direction &dir){
     QPointF target;
     double distance=0x7fffff;
-    for(int i = 0; i < foodNum; i++){
-        if(f[i] == nullptr) continue;
-        QPointF tar = f[i]->scenePos();
+    for(food* f: Food){
+        if(f == nullptr) continue;
+        QPointF tar = f->scenePos();
         double dis = (tar.x()-head.x())*(tar.x()-head.x()) + (tar.y()-head.y())*(tar.y()-head.y());
         if(dis < distance){
             target = tar;
@@ -302,8 +311,8 @@ bool ControlCenter::YDirection(QPointF head, QPointF target, Direction &dir){
 
 bool ControlCenter::IntoItem(QPointF p){
     if(!ai->inevitable){
-        for(int i = 0; i < wallNum ; i++){
-            if(wall[i]->contains(p)&&wall[i]->contains(QPointF(p.x()+block,p.y()+block)))
+        for(Bricks* w: Wall){
+            if (w->contains(p)&& w->contains(QPointF(p.x()+block,p.y()+block)))
                 return true;
         }
 
@@ -396,16 +405,16 @@ void ControlCenter::addNewFood(food *f){
     bool flag;
     do{
         p = randomPoint();
-        flag = s[0]->shape().contains(s[0]->mapFromScene(p));
+        flag = s[0]->contains(s[0]->mapFromScene(p));
 
         if(playerNum == 2)
-            flag = flag|(s[1]->shape().contains(s[1]->mapFromScene(p)));
+            flag = flag|(s[1]->contains(s[1]->mapFromScene(p)));
 
         if(ifAI)
-            flag = flag|(s[2]->shape().contains(s[2]->mapFromScene(p)));
+            flag = flag|(s[2]->contains(s[2]->mapFromScene(p)));
 
-        for(int i= 0; i < wallNum ; i++){
-            if(wall[i]->contains(p)){
+        for(Bricks* w: Wall) {
+            if(w->contains(p)) {
                 flag = true;
                 break;
             }
@@ -417,10 +426,71 @@ void ControlCenter::addNewFood(food *f){
 }
 
 bool ControlCenter::eventFilter(QObject *object, QEvent *event){
-    if(event->type() == QEvent::KeyPress){
+    if(event->type() == QEvent::KeyPress && !editable){
         KeyPressed((QKeyEvent *)event);
+        return true;
+    } else if(event->type() == QEvent::GraphicsSceneMousePress && editable) {        
+        mousePress((QGraphicsSceneMouseEvent*) event);
         return true;
     }
     else
         return QObject::eventFilter(object, event);
+}
+
+void ControlCenter::mousePress(QGraphicsSceneMouseEvent* e){
+    if(e->button() == Qt::LeftButton) {
+        if(!ifMoving) {
+            for(QGraphicsItem* i: Scene.items()){
+                if(i->acceptDrops()&&i->contains(e->scenePos())) {
+                    movingItem = i;
+                    connect(&timer,SIGNAL(timeout()),this,SLOT(blink()));
+                    blinkCounter = 0;
+                    ifMoving = true;
+                    break;
+                }
+            }
+        }
+        else if(ifMoving && movingItem != nullptr) {
+            disconnect(&timer,SIGNAL(timeout()),this,SLOT(blink()));
+            QPointF p = e->scenePos();
+            movingItem->setPos(QPointF(p.x()-(int)p.x()%30, p.y()-(int)p.y()%30));
+            Scene.addItem(movingItem);
+            ifMoving = false;
+        }
+    }
+
+    if(e->button() == Qt::RightButton) {
+        for(QGraphicsItem* i: Scene.items()){
+            if(i->acceptDrops()&&i->contains(e->scenePos())){
+                Scene.removeItem(i);
+                i->setPos(1000,1000); //avoid collision
+                disconnect(&timer,SIGNAL(timeout()),this,SLOT(blink()));
+                ifMoving = false;
+                break;
+            }
+        }
+    }
+}
+
+void ControlCenter::blink(){
+    if(blinkCounter%15 == 7) {
+        Scene.addItem(movingItem);
+    }
+    if(blinkCounter%15 == 0) {
+        Scene.removeItem(movingItem);
+    }
+    blinkCounter++;
+}
+
+void ControlCenter::newFood(){
+    food* newFood = new food(QPointF(0,0));
+    Scene.addItem(newFood);
+    this->addNewFood(newFood);
+    Food.push_back(newFood);
+}
+
+void ControlCenter::newWall(){
+    Bricks* newWall = new Bricks(QPointF(450,0),1,1);
+    Scene.addItem(newWall);
+    Wall.push_back(newWall);
 }

@@ -10,6 +10,7 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     QPainterPath shape() const;
+    bool contains(const QPointF &t) const;
 
     //type == 0 -> normal , type == 1 -> speed up
     //type == 2 -> speed down , type == 3 -> life++

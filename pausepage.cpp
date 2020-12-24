@@ -73,7 +73,10 @@ PausePage::PausePage(QWidget *parent):
         emit loadFile();
     });
     connect(exit,&QPushButton::clicked,this,&PausePage::ToMenu);
-    connect(edit,&QPushButton::clicked,this,&PausePage::editMode);
+    connect(edit,&QPushButton::clicked,this,[=](){
+        this->close();
+        emit editMode();
+    });
 }
 
 void PausePage::send(){
