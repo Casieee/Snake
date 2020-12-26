@@ -45,10 +45,11 @@ bool food::contains(const QPointF &t) const{
 void food::changeType(int t){
     type = t;
     switch (type) {
-    case 1: case 5: color = skyblue; break;
-    case 2: case 6: color = blue2; break;
+    case 1: case 5: case 8: color = skyblue; break;
+    case 2: case 6: case 9: color = blue2; break;
     case 3:  color = green; break;
     case 4: color = darkred; break;
+    case 7: case 10: color = hotPink; break;
     default: color = NavajoWhite;
     }
 }

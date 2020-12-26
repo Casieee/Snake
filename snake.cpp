@@ -16,6 +16,8 @@ snake::snake(ControlCenter &Game, int player):
     playerNumber(player),
     life(1),
     score(0),
+    jetFuel(0),
+    go(false),
     timeRecorder(0),
     SpeedUpRecorder(0),
     SpeedDownRecorder(0),
@@ -143,6 +145,10 @@ void snake::advance(int phase){
     Times++;
     if(Times%deltaTime != 0) return;
 
+    if(go){
+        Sprint();
+        go = false;
+    }
     if(!moves.empty()){
         dir = moves.takeFirst();
     }
@@ -210,10 +216,10 @@ void snake::advance(int phase){
         if(inevitable){
             timeRecorder++;
             switch (timeRecorder) {
-            case 12: case 18: colorSwitchBack(); break;
-            case 15: case 21: color = darkred; color1 = Qt::red; break;
-            case 24: colorSwitchBack(); break;
-            case 25: inevitable = false;
+            case 10: case 14: colorSwitchBack(); break;
+            case 12: case 16: color = darkred; color1 = Qt::red; break;
+            case 18: colorSwitchBack(); break;
+            case 19: inevitable = false;
             }
         }
         handleCollisions();
@@ -273,4 +279,21 @@ void snake::lifePlus(){
 void snake::colorSwitchBack(){
     color = defaultColor;
     color1 = defaultColor1;
+}
+
+void snake::Sprint(){
+    if(!jetFuel)
+        return;
+
+    for(int i = 0; i < 3; ++i){
+        SnakeBody.removeFirst();
+        SnakeBody << head;
+        switch (dir) {
+        case UP: moveUP(); break;
+        case DOWN: moveDOWN(); break;
+        case LEFT: moveLEFT(); break;
+        case RIGHT: moveRIGHT(); break;
+        }
+    }
+    jetFuel--;
 }

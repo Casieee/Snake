@@ -14,6 +14,7 @@ const QColor deepGray(50,50,50);
 const QColor lightGray(200,200,200);
 const QColor NavajoWhite(255, 222, 173);
 const QColor gold(255,215,0);
+const QColor hotPink(255,110,180);
 const QColor darkred(170,0,0);
 
 const qreal block = 30;

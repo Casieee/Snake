@@ -12,8 +12,6 @@ public:
     QPainterPath shape() const;
     bool contains(const QPointF &t) const;
 
-    //type == 0 -> normal , type == 1 -> speed up
-    //type == 2 -> speed down , type == 3 -> life++
     int type;
     QColor color;
     void changeType(int t);

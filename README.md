@@ -26,6 +26,7 @@ This is a classic Snake game with following modes:
   2. speed up for a while
   3. speed down for a while
   4. UNSTOPPABLE for a while (when you become UNSTOPPABLE, you are capable to destroy the bricks. Besides, when your head collides with the other player's body, YOU WIN THE GAME).
+  5. jet food: you can advance three blocks immediately
 - Map edition is available now
 
 ## 4. Expecing Funtions

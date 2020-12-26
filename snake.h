@@ -18,13 +18,7 @@ public:
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
     void advance(int phase);
-    void handleCollisions();
-    void redirection(Direction di);
-    void speedUp();
-    void speedDown();
-    void lifePlus();
-    void Invincible2s();
-    void Inevitalbe2s();
+
 
 protected:
     ControlCenter &game;
@@ -40,6 +34,8 @@ protected:
     int playerNumber;
     int life;
     int score;
+    int jetFuel;
+    bool go;
     int timeRecorder, SpeedUpRecorder, SpeedDownRecorder;
     bool ifSpeedUp,ifSpeedDown;
     bool invincible;
@@ -55,6 +51,14 @@ protected:
     void moveLEFT();
     void moveRIGHT();
     void colorSwitchBack();
+    void handleCollisions();
+    void redirection(Direction di);
+    void speedUp();
+    void speedDown();
+    void lifePlus();
+    void Invincible2s();
+    void Inevitalbe2s();
+    void Sprint();
 };
 
 #endif // SNAKE_H

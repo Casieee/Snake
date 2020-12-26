@@ -44,7 +44,7 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
     originFood[0] = new food(QPointF(210,360));
     Scene.addItem(originFood[0]);
     Food.push_back(originFood[0]);
-    originFood[1] = new food(QPointF(660,360));
+    originFood[1] = new food(QPointF(660,360),7);
     Scene.addItem(originFood[1]);
     Food.push_back(originFood[1]);
 
@@ -52,7 +52,7 @@ ControlCenter::ControlCenter(QGraphicsScene &scene, QObject *parent, int num, bo
         foodNum = 3;
         s[1] = new snake(*this,2);
         Scene.addItem(s[1]);
-        originFood[2] = new food(QPointF(450,150), 1);
+        originFood[2] = new food(QPointF(450,150), 7);
         Scene.addItem(originFood[2]);
         Food.push_back(originFood[2]);
     }
@@ -113,33 +113,6 @@ void ControlCenter::judgeWinner(int player){
     disconnect(&timer,SIGNAL(timeout()),&Scene,SLOT(advance()));
     winner = player;
     emit win();
-}
-
-void ControlCenter::KeyPressed(QKeyEvent *event){
-    if(event->key() == Qt::Key_Escape){
-        pause();
-    }
-
-    switch(event->key()){
-    case Qt::Key_W: s[0]->moves.push_back(UP); s[0]->useCheat.push_back(UP); break;
-    case Qt::Key_S: s[0]->moves.push_back(DOWN); s[0]->useCheat.push_back(DOWN); break;
-    case Qt::Key_A: s[0]->moves.push_back(LEFT); s[0]->useCheat.push_back(LEFT); break;
-    case Qt::Key_D: s[0]->moves.push_back(RIGHT); s[0]->useCheat.push_back(RIGHT); break;
-    }
-
-    if(playerNum == 2 && !ifAI){
-        switch(event->key()){
-        case Qt::Key_Up: s[1]->moves.push_back(UP); s[1]->useCheat.push_back(UP); break;
-        case Qt::Key_Down: s[1]->moves.push_back(DOWN); s[1]->useCheat.push_back(DOWN); break;
-        case Qt::Key_Left: s[1]->moves.push_back(LEFT); s[1]->useCheat.push_back(LEFT); break;
-        case Qt::Key_Right: s[1]->moves.push_back(RIGHT); s[1]->useCheat.push_back(RIGHT); break;
-        }
-    }
-
-    if(s[0]->useCheat.length() == 8 && !s[0]->render)
-        checkCheats(s[0]->useCheat, 1);
-    if(playerNum == 2&& s[1]->useCheat.length() == 8 && !s[1]->render)
-        checkCheats(s[1]->useCheat, 2);
 }
 
 void ControlCenter::checkCheats(QVector<Direction> &directs, int player){
@@ -215,10 +188,11 @@ bool ControlCenter::EatFood(QPointF head, int player){
     for(food* f: Food){
         if(f!=nullptr&&f->scenePos() == head){
             switch (f->type) {
-            case 1: case 5: s[player-1]->speedDown(); break;
-            case 2: case 6: s[player-1]->speedUp(); break;
+            case 1: case 5: case 8: s[player-1]->speedDown(); break;
+            case 2: case 6: case 9:s[player-1]->speedUp(); break;
             case 3: s[player-1]->lifePlus(); break;
             case 4: s[player-1]->Inevitalbe2s();break;
+            case 7: case 10:s[player-1]->jetFuel += 3; break;
             }
             addNewFood(f);
             return true;
@@ -422,7 +396,7 @@ void ControlCenter::addNewFood(food *f){
     } while(flag);
 
     f->setPos(p);
-    f->changeType(rand()%20);
+    f->changeType(rand()%30);
 }
 
 bool ControlCenter::eventFilter(QObject *object, QEvent *event){
@@ -435,6 +409,41 @@ bool ControlCenter::eventFilter(QObject *object, QEvent *event){
     }
     else
         return QObject::eventFilter(object, event);
+}
+
+void ControlCenter::KeyPressed(QKeyEvent *event){
+    if(event->key() == Qt::Key_Escape){
+        pause();
+    }
+
+    if(event->key() == Qt::Key_Space){
+        s[0]->go = true;
+    }
+
+    if(playerNum == 2 && event->key() == Qt::Key_Enter){
+        s[1]->go = true;
+    }
+
+    switch(event->key()){
+    case Qt::Key_W: s[0]->moves.push_back(UP); s[0]->useCheat.push_back(UP); break;
+    case Qt::Key_S: s[0]->moves.push_back(DOWN); s[0]->useCheat.push_back(DOWN); break;
+    case Qt::Key_A: s[0]->moves.push_back(LEFT); s[0]->useCheat.push_back(LEFT); break;
+    case Qt::Key_D: s[0]->moves.push_back(RIGHT); s[0]->useCheat.push_back(RIGHT); break;
+    }
+
+    if(playerNum == 2 && !ifAI){
+        switch(event->key()){
+        case Qt::Key_Up: s[1]->moves.push_back(UP); s[1]->useCheat.push_back(UP); break;
+        case Qt::Key_Down: s[1]->moves.push_back(DOWN); s[1]->useCheat.push_back(DOWN); break;
+        case Qt::Key_Left: s[1]->moves.push_back(LEFT); s[1]->useCheat.push_back(LEFT); break;
+        case Qt::Key_Right: s[1]->moves.push_back(RIGHT); s[1]->useCheat.push_back(RIGHT); break;
+        }
+    }
+
+    if(s[0]->useCheat.length() == 8 && !s[0]->render)
+        checkCheats(s[0]->useCheat, 1);
+    if(playerNum == 2&& s[1]->useCheat.length() == 8 && !s[1]->render)
+        checkCheats(s[1]->useCheat, 2);
 }
 
 void ControlCenter::mousePress(QGraphicsSceneMouseEvent* e){

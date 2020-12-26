@@ -72,7 +72,8 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
     player1Status->move(900,0);
     player1Status->setText("  Player 1\n\n  Speed: " + QString::number(game->s[0]->speed)
             + "\n\n  Life: " + QString::number(game->s[0]->life)
-            + "\n\n  Score: " + QString::number(game->s[0]->score));
+            + "\n\n  Score: " + QString::number(game->s[0]->score)
+            + "\n\n  Fuel: " + QString::number(game->s[0]->jetFuel));
     player1Status->setStyleSheet("QLabel{background-color:rgb(141,238,238);"
                                  "font-family:'Forte';font-size:30px;color:rgb(0,0,139);}");
     player1Status->setAlignment(Qt::AlignCenter);
@@ -80,7 +81,8 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
     connect(game, &ControlCenter::updateStatus, this, [=](){
         player1Status->setText(" Player 1\n\n Speed: " + QString::number(game->s[0]->speed)
                 + "\n\n Life: " + QString::number(game->s[0]->life)
-                + "\n\n Score: " + QString::number(game->s[0]->score));
+                + "\n\n Score: " + QString::number(game->s[0]->score)
+                + "\n\n  Fuel: " + QString::number(game->s[0]->jetFuel));
     });
 
     QLabel *fillempty = new QLabel(this);
@@ -94,7 +96,8 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
         player2Status->move(900,360);
         player2Status->setText(" Player 2\n\n Speed: " + QString::number(game->s[1]->speed)
                 + "\n\n Life: " + QString::number(game->s[1]->life)
-                + "\n\n Score: " + QString::number(game->s[1]->score));
+                + "\n\n Score: " + QString::number(game->s[1]->score)
+                + "\n\n  Fuel: " + QString::number(game->s[1]->jetFuel));
         player2Status->setStyleSheet("QLabel{background-color:rgb(255,193,193);"
                                      "font-family:'Forte';font-size:30px;color:rgb(255,48,48);}");
         player2Status->setAlignment(Qt::AlignCenter);
@@ -103,7 +106,8 @@ subWidget::subWidget(int num, bool AI, QWidget *parent):
         connect(game, &ControlCenter::updateStatus, this, [=](){
             player2Status->setText(" Player 2\n\n Speed: " + QString::number(game->s[1]->speed)
                     + "\n\n Life: " + QString::number(game->s[1]->life)
-                    + "\n\n Score: " + QString::number(game->s[1]->score));
+                    + "\n\n Score: " + QString::number(game->s[1]->score)
+                    + "\n\n  Fuel: " + QString::number(game->s[1]->jetFuel));
         });
     }
 
