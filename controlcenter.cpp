@@ -454,7 +454,8 @@ void ControlCenter::mousePress(QGraphicsSceneMouseEvent* e){
             disconnect(&timer,SIGNAL(timeout()),this,SLOT(blink()));
             QPointF p = e->scenePos();
             movingItem->setPos(QPointF(p.x()-(int)p.x()%30, p.y()-(int)p.y()%30));
-            Scene.addItem(movingItem);
+            if(!Scene.items().contains(movingItem))
+                Scene.addItem(movingItem);
             ifMoving = false;
         }
     }
@@ -465,6 +466,8 @@ void ControlCenter::mousePress(QGraphicsSceneMouseEvent* e){
                 Scene.removeItem(i);
                 i->setPos(1000,1000); //avoid collision
                 disconnect(&timer,SIGNAL(timeout()),this,SLOT(blink()));
+                if(movingItem!=nullptr && !Scene.items().contains(movingItem))
+                    Scene.addItem(movingItem);
                 ifMoving = false;
                 break;
             }
